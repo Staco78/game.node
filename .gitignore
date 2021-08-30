@@ -1,0 +1,5 @@
+.vs/
+build/
+include/
+lib/
+node_modules/

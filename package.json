@@ -1,0 +1,13 @@
+{
+    "name": "game.node",
+    "authors": "Straco",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "node-gyp build -d"
+    },
+    "types": "typings/index.d.ts",
+    "dependencies": {
+        "node-addon-api": "^4.1.0"
+    },
+    "main": "index.js"
+}
