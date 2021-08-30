@@ -2,11 +2,15 @@
 
 namespace game_node {
 	Napi::Object Window::init(Napi::Env env, Napi::Object exports) {
-		Napi::Function func = DefineClass(env, "Window", { 
-			InstanceMethod<&Window::getEvents>("getEvents"),
-			InstanceMethod<&Window::close>("close"),
-			InstanceMethod<&Window::isOpen>("isOpen"),
-			InstanceMethod<&Window::getSize>("getSize")
+		Napi::Function func = DefineClass(env, "Window", {
+				InstanceMethod<&Window::getEvents>("getEvents"),
+				InstanceMethod<&Window::close>("close"),
+				InstanceMethod<&Window::isOpen>("isOpen"),
+				InstanceMethod<&Window::getSize>("getSize"),
+				InstanceMethod<&Window::setSize>("setSize"),
+				InstanceMethod<&Window::display>("display"),
+				InstanceMethod<&Window::setFramerateLimit>("setFramerateLimit"),
+				InstanceMethod<&Window::clear>("clear")
 			});
 
 		Napi::FunctionReference* constructor = new Napi::FunctionReference();
@@ -39,6 +43,8 @@ namespace game_node {
 			Napi::TypeError::New(env, "Title must be a string").ThrowAsJavaScriptException();
 
 		m_window = new sf::RenderWindow(sf::VideoMode(width, height), info[1].ToString().Utf8Value());
+		m_window->setFramerateLimit(60);
+
 	}
 
 	Napi::Value Window::getEvents(const Napi::CallbackInfo& info) {

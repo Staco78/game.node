@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../structures/vector2.h"
+#include "../structures/colors.h"
 
 
 namespace game_node {
@@ -28,7 +29,69 @@ namespace game_node {
 			return Vector2::from(info.Env(), m_window->getSize());
 		}
 
+		Napi::Value setSize(const Napi::CallbackInfo& info) {
+			Napi::Env env = info.Env();
+			if (info.Length() != 1)
+				Napi::TypeError::New(env, "Unexpected number of arguments").ThrowAsJavaScriptException();
 
+			if (!info[0].IsArray())
+				Napi::TypeError::New(env, "Size must be an array of two numbers").ThrowAsJavaScriptException();
+
+			Napi::Value _width = info[0].As<Napi::Array>()[uint32_t(0)].operator Napi::Value();
+			Napi::Value _height = info[0].As<Napi::Array>()[uint32_t(1)].operator Napi::Value();
+
+			if (!_width.IsNumber() || !_height.IsNumber())
+				Napi::TypeError::New(env, "Size must be an array of two numbers").ThrowAsJavaScriptException();
+
+			uint32_t width = _width.ToNumber().Uint32Value();
+			uint32_t height = _height.ToNumber().Uint32Value();
+
+			m_window->setSize(sf::Vector2u(width, height));
+
+			return env.Undefined();
+		}
+
+		Napi::Value display(const Napi::CallbackInfo& info) {
+			m_window->display();
+
+			return info.Env().Undefined();
+		}
+
+		Napi::Value setFramerateLimit(const Napi::CallbackInfo& info) {
+			Napi::Env env = info.Env();
+			if (info.Length() != 1)
+				Napi::TypeError::New(env, "Unexpected number of arguments").ThrowAsJavaScriptException();
+
+			if (!info[0].IsNumber())
+				Napi::TypeError::New(env, "Framerate must be a number").ThrowAsJavaScriptException();
+
+			int64_t framerate = info[0].ToNumber().Int64Value();
+
+			if (framerate < 0)
+				Napi::TypeError::New(env, "Framerate must be positive").ThrowAsJavaScriptException();
+
+			m_window->setFramerateLimit(framerate);
+			return env.Undefined();
+		}
+
+		Napi::Value clear(const Napi::CallbackInfo& info) {
+			Napi::Env env = info.Env();
+
+			if (info.Length() == 0) {
+				m_window->clear();
+			}
+			else if (info.Length() == 1) {
+				Color color = Color::resolve(env, info[0]);
+
+				m_window->clear(color.toSfmlColor());
+			}
+			else Napi::TypeError::New(env, "Unexpected number of arguments").ThrowAsJavaScriptException();
+
+
+
+
+			return env.Undefined();
+		}
 
 	private:
 		sf::RenderWindow* m_window = nullptr;

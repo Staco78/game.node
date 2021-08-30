@@ -1,3 +1,5 @@
+import { ColorResolvable } from "../colors";
+
 export declare class Window {
     constructor(size: [number, number], title: string);
 
@@ -5,6 +7,10 @@ export declare class Window {
     close(): void;
     isOpen(): boolean;
     getSize(): { x: number; y: number };
+    setSize(size: [width: number, height: number]): void;
+    display(): void;
+    setFramerateLimit(framerate: number): void;
+    clear(color: ColorResolvable): void;
 }
 
 export declare const enum Event {

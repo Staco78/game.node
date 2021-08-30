@@ -6,8 +6,8 @@
                 "src/index.cpp",
                 "src/window/window.cpp",
                 "src/window/window.h",
-                "src/structures/vector2.cpp",
-                "src/structures/vector2.h"
+                "src/structures/vector2.h",
+                "src/structures/colors.h"
             ],
             "include_dirs": [
                 "<(module_root_dir)/include",

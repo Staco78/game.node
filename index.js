@@ -1,6 +1,5 @@
 module.exports = require("./build/Debug/binding");
 
-
 module.exports.Event = {
     Closed: 0, //!< The window requested to be closed (no data)
     Resized: 1, //!< The window was resized (data in event.size)
@@ -25,4 +24,38 @@ module.exports.Event = {
     TouchMoved: 22, //!< A touch moved (data in event.touch)
     TouchEnded: 21, //!< A touch event ended (data in event.touch)
     SensorChanged: 22,
-}
+};
+
+module.exports.Color = class Color {
+    constructor(color, color2, color3) {
+        const err_msg = "Color must be an array of three numbers, a Color or 3 numbers";
+        if (Array.isArray(color)) {
+            if (color.length !== 3) throw new TypeError(err_msg);
+
+            for (const c of color) {
+                if (typeof c !== "number") throw new TypeError(err_msg);
+                if (c > 255 || c < 0) throw new TypeError("A color channel must be between 0 and 255");
+            }
+
+            this.r = color[0];
+            this.g = color[1];
+            this.b = color[2];
+        } else if (typeof color === "object" && "r" in color && "g" in color && "b" in color) {
+            for (const c of color) {
+                if (typeof c !== "number") throw new TypeError(err_msg);
+                if (c > 255 || c < 0) throw new TypeError("A color channel must be between 0 and 255");
+            }
+
+            this.r = color.r;
+            this.g = color.g;
+            this.b = color.b;
+        } else if (typeof color === "number" && typeof color2 === "number" && typeof color3 === "number") {
+            if (color > 255 || color < 0 || color2 > 255 || color2 < 0 || color3 > 255 || color3 < 0)
+                throw new TypeError("A color channel must be between 0 and 255");
+
+            this.r = color;
+            this.g = color2;
+            this.b = color3;
+        } else throw new TypeError(err_msg);
+    }
+};
