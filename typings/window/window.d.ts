@@ -1,4 +1,5 @@
-import { ColorResolvable } from "../colors";
+import { ColorResolvable } from "../structures/colors";
+import { Vector2dResolvable } from "../structures/vector2d";
 
 export declare class Window {
     constructor(size: [number, number], title: string);
@@ -7,7 +8,8 @@ export declare class Window {
     close(): void;
     isOpen(): boolean;
     getSize(): { x: number; y: number };
-    setSize(size: [width: number, height: number]): void;
+    setSize(size: Vector2dResolvable): void;
+    setSize(width: number, height: number): void;
     display(): void;
     setFramerateLimit(framerate: number): void;
     clear(color: ColorResolvable): void;

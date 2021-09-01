@@ -3,9 +3,10 @@
 #include "napi.h"
 #include <SFML/Graphics.hpp>
 
-#include "../structures/vector2.h"
+#include "../structures/vector2d.h"
 #include "../structures/colors.h"
 
+#include <iostream>
 
 namespace game_node {
 	class Window : public Napi::ObjectWrap<Window>
@@ -26,27 +27,13 @@ namespace game_node {
 		}
 
 		Napi::Value getSize(const Napi::CallbackInfo& info) {
-			return Vector2::from(info.Env(), m_window->getSize());
+			return Vector2d::from(info.Env(), m_window->getSize());
 		}
 
 		Napi::Value setSize(const Napi::CallbackInfo& info) {
 			Napi::Env env = info.Env();
-			if (info.Length() != 1)
-				Napi::TypeError::New(env, "Unexpected number of arguments").ThrowAsJavaScriptException();
 
-			if (!info[0].IsArray())
-				Napi::TypeError::New(env, "Size must be an array of two numbers").ThrowAsJavaScriptException();
-
-			Napi::Value _width = info[0].As<Napi::Array>()[uint32_t(0)].operator Napi::Value();
-			Napi::Value _height = info[0].As<Napi::Array>()[uint32_t(1)].operator Napi::Value();
-
-			if (!_width.IsNumber() || !_height.IsNumber())
-				Napi::TypeError::New(env, "Size must be an array of two numbers").ThrowAsJavaScriptException();
-
-			uint32_t width = _width.ToNumber().Uint32Value();
-			uint32_t height = _height.ToNumber().Uint32Value();
-
-			m_window->setSize(sf::Vector2u(width, height));
+			m_window->setSize(Vector2d::resolve<unsigned int>(info).data);
 
 			return env.Undefined();
 		}
@@ -86,8 +73,6 @@ namespace game_node {
 				m_window->clear(color.toSfmlColor());
 			}
 			else Napi::TypeError::New(env, "Unexpected number of arguments").ThrowAsJavaScriptException();
-
-
 
 
 			return env.Undefined();

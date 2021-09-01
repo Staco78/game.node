@@ -18,31 +18,20 @@ namespace game_node {
 		env.SetInstanceData(constructor);
 
 		exports.Set("Window", func);
+
 		return exports;
 	}
 
 	Window::Window(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Window>(info) {
 		Napi::Env env = info.Env();
 
-		if (info.Length() != 2)
-			Napi::TypeError::New(env, "Unexpected number of arguments").ThrowAsJavaScriptException();
+		auto data = Vector2d::resolve<unsigned int>(info);
 
-		if (!info[0].IsArray())
-			Napi::TypeError::New(env, "Size must be an array of two numbers").ThrowAsJavaScriptException();
-
-		Napi::Value _width = info[0].As<Napi::Array>()[uint32_t(0)].operator Napi::Value();
-		Napi::Value _height = info[0].As<Napi::Array>()[uint32_t(1)].operator Napi::Value();
-
-		if (!_width.IsNumber() || !_height.IsNumber())
-			Napi::TypeError::New(env, "Size must be an array of two numbers").ThrowAsJavaScriptException();
-
-		uint32_t width = _width.ToNumber().Uint32Value();
-		uint32_t height = _height.ToNumber().Uint32Value();
-
-		if (!info[1].IsString())
+		if (!info[data.lastArgUse + 1].IsString())
 			Napi::TypeError::New(env, "Title must be a string").ThrowAsJavaScriptException();
 
-		m_window = new sf::RenderWindow(sf::VideoMode(width, height), info[1].ToString().Utf8Value());
+
+		m_window = new sf::RenderWindow(sf::VideoMode(data.data.x, data.data.y), info[data.lastArgUse + 1].ToString().Utf8Value());
 		m_window->setFramerateLimit(60);
 
 	}

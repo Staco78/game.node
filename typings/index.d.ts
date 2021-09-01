@@ -1,2 +1,3 @@
 export * from "./window/window";
-export * from "./colors"
+export * from "./structures/colors"
+export * from "./structures/vector2d"

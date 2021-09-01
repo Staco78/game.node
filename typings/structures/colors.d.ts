@@ -7,4 +7,4 @@ export declare class Color {
     b: number;
 }
 
-export type ColorResolvable = Color | [number, number, number] | { r: number; g: number; r: number };
+export type ColorResolvable = Color | [number, number, number] | { r: number; g: number; b: number };
