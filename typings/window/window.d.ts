@@ -9,7 +9,6 @@ export declare class Window {
     isOpen(): boolean;
     getSize(): { x: number; y: number };
     setSize(size: Vector2dResolvable): void;
-    setSize(width: number, height: number): void;
     display(): void;
     setFramerateLimit(framerate: number): void;
     clear(color: ColorResolvable): void;

@@ -10,7 +10,8 @@ namespace game_node {
 				InstanceMethod<&Window::setSize>("setSize"),
 				InstanceMethod<&Window::display>("display"),
 				InstanceMethod<&Window::setFramerateLimit>("setFramerateLimit"),
-				InstanceMethod<&Window::clear>("clear")
+				InstanceMethod<&Window::clear>("clear"),
+				InstanceMethod<&Window::draw>("draw")
 			});
 
 		Napi::FunctionReference* constructor = new Napi::FunctionReference();
@@ -25,13 +26,13 @@ namespace game_node {
 	Window::Window(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Window>(info) {
 		Napi::Env env = info.Env();
 
-		auto data = Vector2d::resolve<unsigned int>(info);
+		auto data = Vector2d::resolve<uint32_t>(info);
 
-		if (!info[data.lastArgUse + 1].IsString())
+		if (!info[1].IsString())
 			Napi::TypeError::New(env, "Title must be a string").ThrowAsJavaScriptException();
 
 
-		m_window = new sf::RenderWindow(sf::VideoMode(data.data.x, data.data.y), info[data.lastArgUse + 1].ToString().Utf8Value());
+		m_window = new sf::RenderWindow(sf::VideoMode(data.x, data.y), info[1].ToString().Utf8Value());
 		m_window->setFramerateLimit(60);
 
 	}

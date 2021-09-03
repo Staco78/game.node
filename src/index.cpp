@@ -11,6 +11,7 @@ namespace game_node {
 		exports = Window::init(env, exports);
 		exports = Rect::init(env, exports);
 		exports = Vector2d::init(env, exports);
+
 		return exports;
 	}
 
