@@ -1,5 +1,8 @@
 module.exports = require("./build/Debug/binding");
 
+Object.setPrototypeOf(module.exports.Rect.prototype, module.exports.Shape.prototype);
+Object.setPrototypeOf(module.exports.Rect, module.exports.Shape);
+
 module.exports.Event = {
     Closed: 0, //!< The window requested to be closed (no data)
     Resized: 1, //!< The window was resized (data in event.size)

@@ -4,7 +4,12 @@ namespace game_node
 {
 	Napi::Object Rect::init(Napi::Env env, Napi::Object exports)
 	{
-		Napi::Function func = DefineClass(env, "Rect", {InstanceAccessor("x", &Rect::getX, &Rect::setX), InstanceAccessor("y", &Rect::getY, &Rect::setY), InstanceAccessor("width", &Rect::getWidth, &Rect::setWidth), InstanceAccessor("height", &Rect::getHeight, &Rect::setHeight)});
+		Napi::Function func = DefineClass(env, "Rect",
+										  {InstanceAccessor("x", &Rect::getX, &Rect::setX),
+										   InstanceAccessor("y", &Rect::getY, &Rect::setY),
+										   InstanceAccessor("width", &Rect::getWidth, &Rect::setWidth),
+										   InstanceAccessor("height", &Rect::getHeight, &Rect::setHeight),
+										   InstanceAccessor("color", &Rect::getFillColor, &Rect::setFillColor)});
 
 		Napi::FunctionReference *constructor = new Napi::FunctionReference();
 		*constructor = Napi::Persistent(func);
@@ -28,7 +33,7 @@ namespace game_node
 			if (!info[i].IsNumber())
 				Napi::TypeError::New(env, "All of rect constructor arguments must be numbers").ThrowAsJavaScriptException();
 
-			args[i] = info[1].ToNumber().FloatValue();
+			args[i] = info[i].ToNumber().FloatValue();
 		}
 
 		sf::RectangleShape::setPosition(args[0], args[1]);

@@ -4,7 +4,10 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../../structures/vector2d.h"
+#include "../structures/vector2d.h"
+#include "../structures/colors.h"
+
+#include <iostream>
 
 namespace game_node
 {
@@ -25,7 +28,7 @@ namespace game_node
 			if (!value.IsNumber())
 				Napi::TypeError::New(info.Env(), "X must be a number").ThrowAsJavaScriptException();
 
-			setPosition(value.ToNumber().Int64Value(), getPosition().y);
+			setPosition(value.ToNumber().FloatValue(), getPosition().y);
 		}
 
 		Napi::Value getY(const Napi::CallbackInfo &info)
@@ -38,7 +41,7 @@ namespace game_node
 			if (!value.IsNumber())
 				Napi::TypeError::New(info.Env(), "Y must be a number").ThrowAsJavaScriptException();
 
-			setPosition(getPosition().x, value.ToNumber().Int64Value());
+			setPosition(getPosition().x, value.ToNumber().FloatValue());
 		}
 
 		Napi::Value getWidth(const Napi::CallbackInfo &info)
@@ -51,7 +54,7 @@ namespace game_node
 			if (!value.IsNumber())
 				Napi::TypeError::New(info.Env(), "X must be a number").ThrowAsJavaScriptException();
 
-			setSize(sf::Vector2f(value.ToNumber().Int64Value(), getSize().y));
+			setSize(sf::Vector2f(value.ToNumber().FloatValue(), getSize().y));
 		}
 
 		Napi::Value getHeight(const Napi::CallbackInfo &info)
@@ -64,7 +67,17 @@ namespace game_node
 			if (!value.IsNumber())
 				Napi::TypeError::New(info.Env(), "Y must be a number").ThrowAsJavaScriptException();
 
-			setSize(sf::Vector2f(getSize().x, value.ToNumber().Int64Value()));
+			setSize(sf::Vector2f(getSize().x, value.ToNumber().FloatValue()));
+		}
+
+		Napi::Value getFillColor(const Napi::CallbackInfo &info)
+		{
+			return Napi::Value::From(info.Env(), Color(sf::RectangleShape::getFillColor()).toObject(info.Env()));
+		}
+
+		void setFillColor(const Napi::CallbackInfo &info, const Napi::Value &value)
+		{
+			sf::RectangleShape::setFillColor(Color::resolve(info.Env(), value).toSfmlColor());
 		}
 	};
 

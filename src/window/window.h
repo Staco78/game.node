@@ -5,7 +5,8 @@
 
 #include "../structures/vector2d.h"
 #include "../structures/colors.h"
-#include "../drawing/shapes/rect.h"
+#include "../drawing/shape.h"
+#include "../drawing/rect.h"
 
 #include <iostream>
 
@@ -89,12 +90,23 @@ namespace game_node
 			return env.Undefined();
 		}
 
-		Napi::Value draw(const Napi::CallbackInfo &info){
-			if (info.Length() != 1){
+		Napi::Value draw(const Napi::CallbackInfo &info)
+		{
+			if (info.Length() != 1)
+			{
 				Napi::TypeError::New(info.Env(), "Unexpected number of arguments").ThrowAsJavaScriptException();
 			}
 
-			m_window->draw(*Rect::Unwrap(info[0].ToObject()));
+			if (!info[0].IsObject())
+			{
+				Napi::TypeError::New(info.Env(), "Element to draw must be an object").ThrowAsJavaScriptException();
+			}
+
+			if (!info[0].ToObject().InstanceOf(Shape::getConstructor()->Value())) {
+				Napi::TypeError::New(info.Env(), "Element to draw must be a shape").ThrowAsJavaScriptException();
+			}
+
+			m_window->draw(*Shape::Unwrap(info[0].ToObject()));
 
 			return info.Env().Undefined();
 		}

@@ -3,12 +3,16 @@
 
 #include <SFML/System.hpp>
 
-namespace game_node {
-	class Color {
+namespace game_node
+{
+	class Color
+	{
 	public:
-		Color static resolve(Napi::Env env, Napi::Value value) {
+		Color static resolve(Napi::Env env, Napi::Value value)
+		{
 			const char err_msg[] = "Color must be an array of three numbers or a color object";
-			if (value.IsArray()) {
+			if (value.IsArray())
+			{
 				Napi::Array array = value.As<Napi::Array>();
 				if (array.Length() != 3)
 					Napi::TypeError::New(env, err_msg);
@@ -29,13 +33,16 @@ namespace game_node {
 
 				return Color(r, g, b);
 			}
-			else if (value.IsObject()) {
-				if (value.As<Napi::Object>().Has("r") && value.As<Napi::Object>().Has("g") && value.As<Napi::Object>().Has("b")) {
+			else if (value.IsObject())
+			{
+				if (value.As<Napi::Object>().Has("r") && value.As<Napi::Object>().Has("g") && value.As<Napi::Object>().Has("b"))
+				{
 					Napi::Value _r = value.As<Napi::Object>().Get("r");
 					Napi::Value _g = value.As<Napi::Object>().Get("g");
 					Napi::Value _b = value.As<Napi::Object>().Get("b");
 
-					if (_r.IsNumber() && _g.IsNumber() && _b.IsNumber()) {
+					if (_r.IsNumber() && _g.IsNumber() && _b.IsNumber())
+					{
 						int32_t r = _r.ToNumber().Int32Value();
 						int32_t g = _g.ToNumber().Int32Value();
 						int32_t b = _b.ToNumber().Int32Value();
@@ -45,21 +52,42 @@ namespace game_node {
 
 						return Color(r, g, b);
 					}
-					else Napi::TypeError::New(env, err_msg).ThrowAsJavaScriptException();
-
+					else
+						Napi::TypeError::New(env, err_msg).ThrowAsJavaScriptException();
 				}
-				else Napi::TypeError::New(env, err_msg).ThrowAsJavaScriptException();
+				else
+					Napi::TypeError::New(env, err_msg).ThrowAsJavaScriptException();
 			}
-			else Napi::TypeError::New(env, err_msg).ThrowAsJavaScriptException();
+			else
+				Napi::TypeError::New(env, err_msg).ThrowAsJavaScriptException();
 		}
 
-		Color(uint32_t r, uint32_t g, uint32_t b) {
+		Color(uint32_t r, uint32_t g, uint32_t b)
+		{
 			m_r = r;
 			m_g = g;
 			m_b = b;
 		}
 
-		sf::Color toSfmlColor() {
+		Color(const sf::Color &color)
+		{
+			m_r = color.r;
+			m_g = color.g;
+			m_b = color.b;
+		}
+
+		Napi::Object toObject(Napi::Env env)
+		{
+			auto obj = Napi::Object::New(env);
+			obj.Set("x", Napi::Value::From(env, m_r));
+			obj.Set("g", Napi::Value::From(env, m_g));
+			obj.Set("b", Napi::Value::From(env, m_b));
+
+			return obj;
+		}
+
+		sf::Color toSfmlColor()
+		{
 			return sf::Color(m_r, m_g, m_b);
 		}
 
