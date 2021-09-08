@@ -9,7 +9,8 @@ namespace game_node
 										   InstanceAccessor("y", &Rect::getY, &Rect::setY),
 										   InstanceAccessor("width", &Rect::getWidth, &Rect::setWidth),
 										   InstanceAccessor("height", &Rect::getHeight, &Rect::setHeight),
-										   InstanceAccessor("color", &Rect::getFillColor, &Rect::setFillColor)});
+										   InstanceAccessor("color", &Rect::getFillColor, &Rect::setFillColor),
+										   InstanceMethod<&Rect::setTexture>("setTexture")});
 
 		Napi::FunctionReference *constructor = new Napi::FunctionReference();
 		*constructor = Napi::Persistent(func);

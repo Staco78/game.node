@@ -6,8 +6,7 @@
 
 #include "../structures/vector2d.h"
 #include "../structures/colors.h"
-
-#include <iostream>
+#include "../structures/texture.h"
 
 namespace game_node
 {
@@ -78,6 +77,19 @@ namespace game_node
 		void setFillColor(const Napi::CallbackInfo &info, const Napi::Value &value)
 		{
 			sf::RectangleShape::setFillColor(Color::resolve(info.Env(), value).toSfmlColor());
+		}
+
+		void setTexture(const Napi::CallbackInfo &info)
+		{
+			if (info.Length() != 1)
+				Napi::TypeError::New(info.Env(), "Unexpected number of arguments").ThrowAsJavaScriptException();
+
+			if (info[0].IsObject() && info[0].ToObject().InstanceOf(Texture::getConstructorRef()->Value()))
+			{
+				sf::RectangleShape::setTexture(Texture::Unwrap(info[0].ToObject())->getSfTexture());
+			}
+			else
+				Napi::TypeError::New(info.Env(), "Argument must be a texture").ThrowAsJavaScriptException();
 		}
 	};
 
